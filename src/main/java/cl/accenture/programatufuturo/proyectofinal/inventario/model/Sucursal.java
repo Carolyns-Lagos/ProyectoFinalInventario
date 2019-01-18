@@ -17,8 +17,8 @@ public class Sucursal {
 
     }
 
-    public Sucursal(int idSucursal, String ubicacion, String comuna, String direccion,ArrayList<Producto> productos) {
-        this.idSucursal=idSucursal;
+    public Sucursal(int idSucursal, String ubicacion, String comuna, String direccion, ArrayList<Producto> productos) {
+        this.idSucursal = idSucursal;
         this.ubicacion = ubicacion;
         this.comuna = comuna;
         this.direccion = direccion;

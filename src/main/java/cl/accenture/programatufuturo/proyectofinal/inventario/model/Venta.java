@@ -18,7 +18,7 @@ public class Venta {
     }
 
     public Venta(int idVenta, Usuario usuario, Sucursal sucursal, Date date, ArrayList<Producto> listaDeProductos) {
-        this.idVenta=idVenta;
+        this.idVenta = idVenta;
         this.usuario = usuario;
         this.sucursal = sucursal;
         this.date = date;

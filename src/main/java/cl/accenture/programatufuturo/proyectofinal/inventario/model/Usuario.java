@@ -11,7 +11,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String rut,String nombre, String correo, String password, String rol, Sucursal sucursal) {
+    public Usuario(String rut, String nombre, String correo, String password, String rol, Sucursal sucursal) {
         this.rut = rut;
         this.nombre = nombre;
         this.correo = correo;

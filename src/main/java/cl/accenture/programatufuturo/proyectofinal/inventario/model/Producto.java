@@ -21,7 +21,7 @@ public class Producto {
 
 
     public Producto(int idProducto, String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria, ArrayList<Sucursal> sucursales, ArrayList<Venta> listaDeVentas) {
-        this.idProducto=idProducto;
+        this.idProducto = idProducto;
         this.nombre = nombre;
         this.caracteristica = caracteristica;
         this.cantidadMin = cantidadMin;
@@ -29,11 +29,11 @@ public class Producto {
         this.precio = precio;
         this.marca = marca;
         this.categoria = categoria;
-        this.listaSucursales= sucursales;
-        this.listaDeVentas= listaDeVentas;
+        this.listaSucursales = sucursales;
+        this.listaDeVentas = listaDeVentas;
     }
 
-    public Producto(String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria, ArrayList<Sucursal> listaSucursales,ArrayList<Venta> listaDeVentas) {
+    public Producto(String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria, ArrayList<Sucursal> listaSucursales, ArrayList<Venta> listaDeVentas) {
         this.nombre = nombre;
         this.caracteristica = caracteristica;
         this.cantidadMin = cantidadMin;
@@ -41,8 +41,8 @@ public class Producto {
         this.precio = precio;
         this.marca = marca;
         this.categoria = categoria;
-        this.listaSucursales=listaSucursales;
-        this.listaDeVentas=listaDeVentas;
+        this.listaSucursales = listaSucursales;
+        this.listaDeVentas = listaDeVentas;
     }
 
 

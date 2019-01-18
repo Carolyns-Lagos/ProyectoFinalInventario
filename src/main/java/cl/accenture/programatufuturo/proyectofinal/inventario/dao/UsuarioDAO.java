@@ -83,7 +83,7 @@ public class UsuarioDAO {
         if (verificarUsuario(usuario)!=true){
             //En caso de ser diferente a verdadero, procedere a agregar al usuario
             try{
-                final String SQL = "INSERT INTO usuario(Rut,Nombre,Correo, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?)";
+                final String SQL = "INSERT INTO usuario(Rut,Nombre,Correo, Password, Rol, Sucursal_idSucursal)" + "VALUES (?,?,?,?,?,?)";
                 PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
                 ps.setString(1, usuario.getNombre());
                 ps.setString(2,usuario.getRut());
@@ -100,18 +100,18 @@ public class UsuarioDAO {
     }
 
     public void eliminarUsuarioPorRut(Usuario usuario) throws SinConexionException, UsuarioNoExistenteException, SQLException {
-        if (verificarUsuario(usuario)!=true){
+        if (verificarUsuario(usuario) != true) {
             //En caso de ser verdadero, procedere a eliminar al usuario
             System.out.println("Usuario no existente");
 
         } else {
-            try{
+            try {
                 final String SQL = "UPDATE * FROM usuario WHERE Rut = ?";
                 PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
                 //Le asigno valor al '?'
                 ps.setString(1, usuario.getRut());
                 ps.executeUpdate();
-            } catch (SQLException ex){
+            } catch (SQLException ex) {
                 ex.printStackTrace();
             }
 

@@ -33,8 +33,6 @@ public class ProductoDAO {
         this.conexion = conexion;
     }
 
-
-
     //Metodo para agregar producto, en caso de que no exista o no se pueda conectar por algun problema, no realizara nada, solo me indicara el problema.
 
     public boolean VerificarProducto(Producto Producto) throws ProductoYaEnSistemaException,SinConexionException, SQLException {
@@ -54,19 +52,19 @@ public class ProductoDAO {
     }
 
     //Metodo que me permitira agregar un Producto que no se encuentre en la base de datos
-    public void agregarUsuario(Producto producto) throws SinConexionException, SQLException, ProductoYaEnSistemaException {
+    public void agregarProducto(Producto producto) throws SinConexionException, SQLException, ProductoYaEnSistemaException {
         //Verifico que no exista algun producto con el mismo nombre en la base de datos
         if (VerificarProducto(producto)!=false){
             //En caso de ser diferente a false, procedere a agregar al producto
             try{
                 final String SQL = "INSERT INTO Producto(Nombre,Caracteristicas,Cantidad min, Cantidad Max, Precio, Marca)"+ "VALUES (?,?,?,?,?,?)";
                 PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-                ps.setString(1, Producto.getNombre());
-                ps.setString(2,Producto.getCaracteristica());
-                ps.setInt(3,Producto.getCantidadMin());
-                ps.setInt(4,Producto.getCantidadMax());
-                ps.setInt(5, Producto.getPrecio());
-                ps.setString(6,Producto.getMarca());
+                ps.setString(1, producto.getNombre());
+                ps.setString(2,producto.getCaracteristica());
+                ps.setInt(3,producto.getCantidadMin());
+                ps.setInt(4,producto.getCantidadMax());
+                ps.setInt(5, producto.getPrecio());
+                ps.setString(6,producto.getMarca());
                 ps.executeUpdate();
             } catch (SQLException ex){
                 ex.printStackTrace();
