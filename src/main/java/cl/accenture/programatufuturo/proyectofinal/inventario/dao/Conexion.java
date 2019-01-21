@@ -13,7 +13,7 @@ public class Conexion {
 
     //Informacion de mysql necesaria para realizar la coneccion
 
-    private static final String DRIVER = "";
+    private static final String DRIVER = "com.mysql.jdbc.Driver";
     //Direccion de puerto de la base de datos
     private static final int PORT = 3306;
     //Direccion de puerto de la base de datos
@@ -31,15 +31,15 @@ public class Conexion {
             Class.forName(DRIVER);
             Connection connection=
                     DriverManager.getConnection(
-                            "jdbc;mysql"+HOST+":"+PORT+"/"+DATABASE,
+                            "jdbc:mysql://"+HOST+":"+PORT+"/"+DATABASE + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
                             USER,PASSWORD);
 
             return connection;
         } catch (ClassNotFoundException e){
-            throw new SinConexionException("Ocurrio un error al establecer la conexion : " + e.getMessage(), e);
+            throw new SinConexionException("Ocurrio un error al establecer la conexion a : " + e.getMessage(), e);
 
         }catch (SQLException e){
-            throw new SinConexionException("Ocurrio un error al establecer la conexion : " + e.getMessage(), e);
+            throw new SinConexionException("Ocurrio un error al establecer la conexion b : " + e.getMessage(), e);
 
         }
 
