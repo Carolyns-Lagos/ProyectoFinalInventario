@@ -46,23 +46,22 @@ public class Suc {
         System.out.println("Sucursal no encontrado");
         return false;
     }
-    public void agregarIDSucursall(Sucursal sucursal) throws SinConexionException{
+    public static int obtenerIDSucursall(Conexion conexion, Sucursal sucursal) throws SinConexionException{
         int idSuc=0;
         try{
             final String SQL = "SELECT idSucursal from inventariopf.sucursal WHERE Nombre=? and Ubicacion=? and Comuna=? and Direccion=? ";
             PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-            ResultSet rs = ps.executeQuery();
             ps.setString(1,sucursal.getNombre());
             ps.setString(2,sucursal.getUbicacion());
             ps.setString(3,sucursal.getComuna());
             ps.setString(4,sucursal.getDireccion());
-            idSuc+=ps.executeUpdate();
-            sucursal.setIdSucursal(idSuc);
-
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            idSuc = rs.getInt("idSucursal");
         }catch (SQLException e){
             e.printStackTrace();
-
         }
+        return idSuc;
 
     }
 

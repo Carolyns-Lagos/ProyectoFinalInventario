@@ -13,7 +13,7 @@ public class ProgramaPrueba {
 
         //Prueba Sucursal
 
-        Sucursal sucursal = new Sucursal("LLuvia", "Los Leones", "Providencia", "Providencia 123");
+//        Sucursal sucursal = new Sucursal("LLuvia", "Los Leones", "Providencia", "Providencia 123");
 //        Suc daoSuc= new Suc();
 //        dao.agregarSucursall(sucursal);
 //        daoSuc.eliminarSucursalPorNombre(sucursal);
@@ -22,12 +22,12 @@ public class ProgramaPrueba {
 
 
 
-        UsuarioDAO daoUsers = new UsuarioDAO();
-        Usuario usuario = new Usuario("1855588", "Jua Perez", "hola@gmail.com", "1234aa", "VENDEDOR", sucursal );
+//        UsuarioDAO daoUsers = new UsuarioDAO();
+//        Usuario usuario = new Usuario("185589988","Jua Perez","hola@gmail.com",5558684,"1234aa","VENDEDOR", sucursal);
+//
+//        daoUsers.agregarUsuario(usuario);
 
-        daoUsers.agregarUsuario(usuario);
-
-        daoUsers.eliminarUsuarioPorRut(usuario);
+       //daoUsers.eliminarUsuarioPorRut(usuario);
 
         //Prueba Sucursal
 
@@ -35,19 +35,19 @@ public class ProgramaPrueba {
 
         //Prueba encriptar
 
-        String contraseña= "61756550";
-        String contraseñaEncriptada= UsuarioDAO.encriptar(contraseña);
-        System.out.println("Contraseña Original="+contraseña);
-        System.out.println("Contraseña Encriptada="+contraseñaEncriptada);
-        String contraseñaDesencriptada=UsuarioDAO.desencriptar(contraseñaEncriptada);
-        System.out.println("Contraseña Desencriptada="+contraseñaDesencriptada);
-
-        String contraseña2= "61756550";
-        String contraseñaEncriptada2= UsuarioDAO.encriptar(contraseña2);
-        System.out.println("Contraseña Original="+contraseña2);
-        System.out.println("Contraseña Encriptada="+contraseñaEncriptada2);
-        String contraseñaDesencriptada2=UsuarioDAO.desencriptar(contraseñaEncriptada2);
-        System.out.println("Contraseña Desencriptada="+contraseñaDesencriptada2);
+//        String contraseña= "61756550";
+//        String contraseñaEncriptada= UsuarioDAO.encriptar(contraseña);
+//        System.out.println("Contraseña Original="+contraseña);
+//        System.out.println("Contraseña Encriptada="+contraseñaEncriptada);
+//        String contraseñaDesencriptada=UsuarioDAO.desencriptar(contraseñaEncriptada);
+//        System.out.println("Contraseña Desencriptada="+contraseñaDesencriptada);
+//
+//        String contraseña2= "61756550";
+//        String contraseñaEncriptada2= UsuarioDAO.encriptar(contraseña2);
+//        System.out.println("Contraseña Original="+contraseña2);
+//        System.out.println("Contraseña Encriptada="+contraseñaEncriptada2);
+//        String contraseñaDesencriptada2=UsuarioDAO.desencriptar(contraseñaEncriptada2);
+//        System.out.println("Contraseña Desencriptada="+contraseñaDesencriptada2);
 
 
     }

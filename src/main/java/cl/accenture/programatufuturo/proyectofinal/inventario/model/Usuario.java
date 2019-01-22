@@ -10,7 +10,7 @@ public class Usuario {
 
     //Constructores
 
-    public Usuario(String s, String jua_perez, String s1, String s2, String vendedor, Sucursal sucursal) {
+    public Usuario() {
     }
 
     public Usuario(String rut, String nombre, String correo,int telefono, String password, String rol, Sucursal sucursal) {

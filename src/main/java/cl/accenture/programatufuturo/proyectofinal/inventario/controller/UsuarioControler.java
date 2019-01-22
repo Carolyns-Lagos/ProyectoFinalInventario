@@ -1,6 +1,7 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.controller;
 
 
+import cl.accenture.programatufuturo.proyectofinal.inventario.dao.Suc;
 import cl.accenture.programatufuturo.proyectofinal.inventario.dao.UsuarioDAO;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.UsuarioOContraseñaIncorrectosException;
@@ -28,6 +29,20 @@ public class UsuarioControler {
         } catch (SinConexionException e) {
             e.printStackTrace();
         } catch (UsuarioOContraseñaIncorrectosException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.PUT,
+            value="/agregarUsuario")
+    public void agregarUsuario(@RequestBody Usuario usuario) {
+
+        try{
+            UsuarioDAO dao = new UsuarioDAO();
+            dao.agregarUsuario(usuario);
+        } catch (SinConexionException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 

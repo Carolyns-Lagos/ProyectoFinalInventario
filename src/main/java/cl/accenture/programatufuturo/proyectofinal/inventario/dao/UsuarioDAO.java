@@ -125,20 +125,19 @@ public class UsuarioDAO {
 
     public void agregarUsuario(Usuario usuario) throws SinConexionException, SQLException {
 
-        if (verificarUsuario(usuario)!=true){
+        if (verificarUsuario(usuario)==false){
             System.out.println("Agregar Usuario");
-            int obtenerIntSuc= UsuarioDAO
-
             try{
-                Suc.obtenerIDSucursall(usuario.getSucursal());
-                final String SQL = "INSERT INTO inventariopf.usuario( Rut, Nombre, Correo, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?)";
+                //int n = Suc.obtenerIDSucursall(this.conexion, usuario.getSucursal());
+                final String SQL = "INSERT INTO inventariopf.usuario( Rut, Nombre, Correo,Telefono, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?,?)";
                 PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
                 ps.setString(1,usuario.getRut());
                 ps.setString(2,usuario.getNombre());
                 ps.setString(3,usuario.getCorreo());
-                ps.setString(4,UsuarioDAO.encriptar(usuario.getPassword()));
-                ps.setString(5,usuario.getRol());
-                ps.setInt(6, );
+                ps.setInt(4, usuario.getTelefono());
+                ps.setString(5,UsuarioDAO.encriptar(usuario.getPassword()));
+                ps.setString(6,usuario.getRol());
+                ps.setInt(7, Suc.obtenerIDSucursall(this.conexion, usuario.getSucursal()));
                 ps.executeUpdate();
             } catch (SQLException ex){
                 ex.printStackTrace();
