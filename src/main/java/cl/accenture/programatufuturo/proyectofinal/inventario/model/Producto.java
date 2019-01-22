@@ -1,5 +1,9 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 
+import cl.accenture.programatufuturo.proyectofinal.inventario.dao.SQLIdAutoincrementable;
+import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Producto {
@@ -9,19 +13,17 @@ public class Producto {
     private String nombre, caracteristica;
     private int cantidadMin, cantidadMax, precio;
     private String  marca, categoria;
-    //Para representar la relacion de muchos a muchos con producto se crea una lista, una socursal posee muchos productos
-    private ArrayList<Sucursal> listaSucursales;
-    private ArrayList<Venta> listaDeVentas;
 
     //Constructores
 
-    public Producto() {
-
+    public Producto() throws SinConexionException, SQLException {
+        SQLIdAutoincrementable id= new SQLIdAutoincrementable();
+        this.idProducto = id.idIncrementableProducto();
     }
 
-
-    public Producto(int idProducto, String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria, ArrayList<Sucursal> sucursales, ArrayList<Venta> listaDeVentas) {
-        this.idProducto = idProducto;
+    public Producto(String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria) throws SinConexionException, SQLException {
+        SQLIdAutoincrementable id= new SQLIdAutoincrementable();
+        this.idProducto = id.idIncrementableProducto();
         this.nombre = nombre;
         this.caracteristica = caracteristica;
         this.cantidadMin = cantidadMin;
@@ -29,24 +31,9 @@ public class Producto {
         this.precio = precio;
         this.marca = marca;
         this.categoria = categoria;
-        this.listaSucursales = sucursales;
-        this.listaDeVentas = listaDeVentas;
     }
 
-    public Producto(String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria, ArrayList<Sucursal> listaSucursales, ArrayList<Venta> listaDeVentas) {
-        this.nombre = nombre;
-        this.caracteristica = caracteristica;
-        this.cantidadMin = cantidadMin;
-        this.cantidadMax = cantidadMax;
-        this.precio = precio;
-        this.marca = marca;
-        this.categoria = categoria;
-        this.listaSucursales = listaSucursales;
-        this.listaDeVentas = listaDeVentas;
-    }
-
-
-    //Metodos Get y Set
+//Metodos Get y Set
 
 
     public int getCantidadMin() {
@@ -103,22 +90,6 @@ public class Producto {
 
     public void setCategoria(String nuevaCategoria) {
         this.categoria = categoria;
-    }
-
-    public ArrayList<Sucursal> getListaSucursales() {
-        return this.listaSucursales;
-    }
-
-    public void setListaSucursales(ArrayList<Sucursal> nuevaListaSucursales) {
-        this.listaSucursales = nuevaListaSucursales;
-    }
-
-    public ArrayList<Venta> getListaDeVentas() {
-        return this.listaDeVentas;
-    }
-
-    public void setListaDeVentas(ArrayList<Venta> listaDeVentas) {
-        this.listaDeVentas = listaDeVentas;
     }
 
     public int getIdProducto() {

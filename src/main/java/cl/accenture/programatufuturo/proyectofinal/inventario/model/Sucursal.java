@@ -1,5 +1,9 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 
+import cl.accenture.programatufuturo.proyectofinal.inventario.dao.SQLIdAutoincrementable;
+import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Sucursal {
@@ -7,22 +11,20 @@ public class Sucursal {
     //Atributos de la clase Sucursal
     //el id tengo que generarlo con Springbood
     private int idSucursal;
-    private String ubicacion, comuna, direccion;
-    //Para representar la relacion de muchos a muchos con producto se crea una lista, una socursal posee muchos productos
-    private ArrayList<Producto> listaProductos;
+    private String nombre, ubicacion, comuna, direccion;
+
 
     //Constructores
 
-    public Sucursal() {
+    public Sucursal() throws SinConexionException, SQLException {
 
     }
 
-    public Sucursal(int idSucursal, String ubicacion, String comuna, String direccion, ArrayList<Producto> productos) {
-        this.idSucursal = idSucursal;
+    public Sucursal(String nombre, String ubicacion, String comuna, String direccion) {
+        this.nombre= nombre;
         this.ubicacion = ubicacion;
         this.comuna = comuna;
         this.direccion = direccion;
-        this.listaProductos=productos;
     }
 
     //Metodos Get y Set
@@ -33,6 +35,14 @@ public class Sucursal {
 
     public void setIdSucursal(int idSucursal) {
         this.idSucursal = idSucursal;
+    }
+
+    public String getNombre() {
+        return this.nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getUbicacion() {
@@ -57,14 +67,6 @@ public class Sucursal {
 
     public void setDireccion(String nuevaDireccion) {
         this.direccion = nuevaDireccion;
-    }
-
-    public ArrayList<Producto> getListaProductos() {
-        return this.listaProductos;
-    }
-
-    public void setListaProductos(ArrayList<Producto> nuevaListaProductos) {
-        this.listaProductos = nuevaListaProductos;
     }
 
 }

@@ -2,11 +2,22 @@ package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.UsuarioOContraseñaIncorrectosException;
+import cl.accenture.programatufuturo.proyectofinal.inventario.model.Sucursal;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Usuario;
+import cl.accenture.programatufuturo.proyectofinal.inventario.dao.Suc;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+//Librerias necesarias para el metodo de Encriptacion.
+import java.security.MessageDigest;
+import java.util.Arrays;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Base64;
+
 
 public class UsuarioDAO {
 
@@ -30,13 +41,62 @@ public class UsuarioDAO {
     }
 
 
-    public boolean login(String usuario, String password) throws UsuarioOContraseñaIncorrectosException, SinConexionException {
+    public static String encriptar(String texto){
+
+        String secretKey = "qualityinfosolutions"; //llave para encriptar datos
+        String base64EncryptedString = "";
+
+        try {
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+            Cipher cipher = Cipher.getInstance("DESede");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            byte[] plainTextBytes = texto.getBytes("utf-8");
+            byte[] buf = cipher.doFinal(plainTextBytes);
+            byte[] base64Bytes = Base64.encodeBase64(buf);
+            base64EncryptedString = new String(base64Bytes);
+
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
+    }
+
+    public static String desencriptar(String textoEncriptado) throws Exception {
+
+        String secretKey = "qualityinfosolutions"; //llave para desenciptar datos
+        String base64EncryptedString = "";
+
+        try {
+            byte[] message = Base64.decodeBase64(textoEncriptado.getBytes("utf-8"));
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+
+            Cipher decipher = Cipher.getInstance("DESede");
+            decipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] plainText = decipher.doFinal(message);
+
+            base64EncryptedString = new String(plainText, "UTF-8");
+
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
+    }
+
+    public boolean login(Usuario usuario) throws UsuarioOContraseñaIncorrectosException, SinConexionException {
         try {
             final String SQL = "SELECT * FROM inventarioPF.usuario WHERE Nombre = ?  AND Password =?";
 
             PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-            ps.setString(1, usuario);
-            ps.setString(2, password);
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getRut());
             ResultSet rs = ps.executeQuery(SQL);
             while (rs.next()) {
                 return true;
@@ -67,16 +127,18 @@ public class UsuarioDAO {
 
         if (verificarUsuario(usuario)!=true){
             System.out.println("Agregar Usuario");
+            int obtenerIntSuc= UsuarioDAO
 
             try{
-                final String SQL = "INSERT INTO inventariopf.usuario(Rut,Nombre,Correo, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?)";
+                Suc.obtenerIDSucursall(usuario.getSucursal());
+                final String SQL = "INSERT INTO inventariopf.usuario( Rut, Nombre, Correo, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?)";
                 PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-                ps.setString(1, usuario.getRut());
+                ps.setString(1,usuario.getRut());
                 ps.setString(2,usuario.getNombre());
                 ps.setString(3,usuario.getCorreo());
-                ps.setString(4,usuario.getPassword());
-                ps.setString(5, usuario.getRol());
-                ps.setInt(6, usuario.getSucursal().getIdSucursal());
+                ps.setString(4,UsuarioDAO.encriptar(usuario.getPassword()));
+                ps.setString(5,usuario.getRol());
+                ps.setInt(6, );
                 ps.executeUpdate();
             } catch (SQLException ex){
                 ex.printStackTrace();

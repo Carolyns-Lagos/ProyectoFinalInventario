@@ -44,6 +44,7 @@ public class SQLIdAutoincrementable {
                 id = rs.getInt(1) + 1;
             }
             //En caso de haber un error en la consulta, se indicara
+
         } catch (SQLException e) {
             e.printStackTrace();
 
