@@ -1,9 +1,5 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 
-import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
-
-import java.sql.SQLException;
-
 public class Producto {
 
     //Atributos de la clase Usuario
@@ -15,12 +11,13 @@ public class Producto {
     //Constructores
 
     public Producto() {
+        this.cantidadMin=5;
     }
 
-    public Producto(String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria) {
+    public Producto(String nombre, String caracteristica, int cantidadMax, int precio, String marca, String categoria) {
         this.nombre = nombre;
         this.caracteristica = caracteristica;
-        this.cantidadMin = cantidadMin;
+        this.cantidadMin = 5;
         this.cantidadMax = cantidadMax;
         this.precio = precio;
         this.marca = marca;
