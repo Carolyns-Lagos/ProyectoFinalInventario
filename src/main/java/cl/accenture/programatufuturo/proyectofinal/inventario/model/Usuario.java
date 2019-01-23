@@ -22,6 +22,14 @@ public class Usuario {
         this.rol=rol;
         this.sucursal = sucursal;
     }
+    public Usuario(String rut, String nombre, String correo,int telefono, String password) {
+        this.rut = rut;
+        this.nombre = nombre;
+        this.correo = correo;
+        this.telefono=telefono;
+        this.password = password;
+
+    }
 
     //Metodos Get y Set
 

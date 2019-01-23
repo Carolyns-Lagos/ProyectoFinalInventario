@@ -1,25 +1,26 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 
-import java.sql.Date;
+import cl.accenture.programatufuturo.proyectofinal.inventario.Conversores.ConversorDataUtilASql;
 
 public class Boleta {
 
     //Constructores
     private int idBoleta;
     private Usuario usuario;
-    private Date fecha;
+    private java.sql.Date fecha;
     private int totalBoleta;
 
     //Constructores
 
     public Boleta() {
-
+        java.util.Date uDate = new java.util.Date();
+        this.fecha= ConversorDataUtilASql.convertUtilToSql(uDate);
     }
 
-    public Boleta(int idBoleta, Usuario usuario, int totalBoleta) {
-        this.idBoleta = idBoleta;
+    public Boleta( Usuario usuario) {
         this.usuario = usuario;
-        this.totalBoleta = totalBoleta;
+        java.util.Date uDate = new java.util.Date();
+        this.fecha= ConversorDataUtilASql.convertUtilToSql(uDate);
     }
 
     //Metodos Set y GeT
@@ -39,11 +40,11 @@ public class Boleta {
         this.usuario = usuario;
     }
 
-    public Date getFecha() {
+    public java.sql.Date getFecha() {
         return this.fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(java.sql.Date fecha) {
         this.fecha = fecha;
     }
 

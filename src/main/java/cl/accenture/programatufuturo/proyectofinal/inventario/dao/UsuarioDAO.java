@@ -2,21 +2,19 @@ package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.UsuarioOContraseñaIncorrectosException;
-import cl.accenture.programatufuturo.proyectofinal.inventario.model.Sucursal;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Usuario;
-import cl.accenture.programatufuturo.proyectofinal.inventario.dao.Suc;
+import org.apache.commons.codec.binary.Base64;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-//Librerias necesarias para el metodo de Encriptacion.
-import java.security.MessageDigest;
-import java.util.Arrays;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.codec.binary.Base64;
+import java.security.MessageDigest;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+
+//Librerias necesarias para el metodo de Encriptacion.
 
 
 public class UsuarioDAO {
@@ -94,9 +92,10 @@ public class UsuarioDAO {
         try {
             final String SQL = "SELECT * FROM inventarioPF.usuario WHERE Nombre = ?  AND Password =?";
 
+            String contraseñaEncriptada= UsuarioDAO.encriptar(usuario.getPassword());
             PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
             ps.setString(1, usuario.getNombre());
-            ps.setString(2, usuario.getRut());
+            ps.setString(2, contraseñaEncriptada);
             ResultSet rs = ps.executeQuery(SQL);
             while (rs.next()) {
                 return true;
@@ -128,7 +127,6 @@ public class UsuarioDAO {
         if (verificarUsuario(usuario)==false){
             System.out.println("Agregar Usuario");
             try{
-                //int n = Suc.obtenerIDSucursall(this.conexion, usuario.getSucursal());
                 final String SQL = "INSERT INTO inventariopf.usuario( Rut, Nombre, Correo,Telefono, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?,?)";
                 PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
                 ps.setString(1,usuario.getRut());

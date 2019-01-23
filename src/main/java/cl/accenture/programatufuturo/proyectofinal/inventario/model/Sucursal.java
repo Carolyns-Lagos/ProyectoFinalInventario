@@ -1,10 +1,8 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 
-import cl.accenture.programatufuturo.proyectofinal.inventario.dao.SQLIdAutoincrementable;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Sucursal {
 

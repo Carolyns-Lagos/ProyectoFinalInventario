@@ -1,10 +1,8 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 
-import cl.accenture.programatufuturo.proyectofinal.inventario.dao.SQLIdAutoincrementable;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Producto {
 
@@ -16,14 +14,10 @@ public class Producto {
 
     //Constructores
 
-    public Producto() throws SinConexionException, SQLException {
-        SQLIdAutoincrementable id= new SQLIdAutoincrementable();
-        this.idProducto = id.idIncrementableProducto();
+    public Producto() {
     }
 
-    public Producto(String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria) throws SinConexionException, SQLException {
-        SQLIdAutoincrementable id= new SQLIdAutoincrementable();
-        this.idProducto = id.idIncrementableProducto();
+    public Producto(String nombre, String caracteristica, int cantidadMin, int cantidadMax, int precio, String marca, String categoria) {
         this.nombre = nombre;
         this.caracteristica = caracteristica;
         this.cantidadMin = cantidadMin;
