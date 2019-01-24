@@ -156,7 +156,7 @@ public class UsuarioDAO {
                 ps.setInt(4, usuario.getTelefono());
                 ps.setString(5,UsuarioDAO.encriptar(usuario.getPassword()));
                 ps.setString(6,usuario.getRol());
-                ps.setInt(7, Suc.obtenerIDSucursall(this.conexion, usuario.getSucursal()));
+                ps.setInt(7, SucursalDAO.obtenerIDSucursall(this.conexion, usuario.getSucursal()));
                 ps.executeUpdate();
             } catch (SQLException ex){
                 ex.printStackTrace();

@@ -32,9 +32,8 @@ public class UsuarioControler {
         }
     }
     @CrossOrigin(origins="*")
-    @PutMapping("/agregarUsuarioVendedor")
-    public String agregarUsuarioVendedor(@RequestBody Usuario usuario) {
-
+    @PostMapping("/agregarUsuarioVendedor")
+    public Usuario agregarUsuarioVendedor(@RequestBody Usuario usuario) {
         try{
             Usuario newUsuario= new Usuario(usuario.getRut(),usuario.getNombre(),usuario.getCorreo(), usuario.getTelefono(), usuario.getPassword(), "VENDEDOR", sucursal);
             System.out.println("Usuario Actualizado");
@@ -51,7 +50,7 @@ public class UsuarioControler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "Usuario Agregado Con exito";
+        return usuario;
 
 
     }

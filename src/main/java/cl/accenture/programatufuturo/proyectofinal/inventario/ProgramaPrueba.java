@@ -21,8 +21,8 @@ public class ProgramaPrueba {
         //Prueba Sucursal
 
 //        Sucursal sucursal = new Sucursal("LLuvia", "Los Leones", "Providencia", "Providencia 123");
-//        Suc daoSuc= new Suc();
-//        dao.agregarSucursall(sucursal);
+//        SucursalDAO daoSuc= new SucursalDAO();
+//        daoSuc.agregarSucursall(sucursal);
 //        daoSuc.eliminarSucursalPorNombre(sucursal);
 
         //Prueba Metodos Usuario

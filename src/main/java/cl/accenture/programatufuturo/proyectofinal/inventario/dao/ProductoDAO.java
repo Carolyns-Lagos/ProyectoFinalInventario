@@ -1,77 +1,123 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 
-import cl.accenture.programatufuturo.proyectofinal.inventario.exception.*;
+import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Producto;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
-
 public class ProductoDAO {
-
-    //Se crea atributo para la conexion, dado que sera necesaria para trabajar con los datos y tablas de SQL
     private Conexion conexion;
 
-    //Inicializo esta clase con un constructor que permita la conexion.
-
-    //CONSTRUCTOR
     public ProductoDAO(){
 
         this.conexion=new Conexion();
     }
 
-    // GETTERS Y SETTERS
+    //Constructores get y ser
 
     public Conexion getConexion() {
 
         return this.conexion;
     }
+
     public void setConexion(Conexion conexion) {
 
         this.conexion = conexion;
     }
 
-    //Metodo para agregar producto, en caso de que no exista o no se pueda conectar por algun problema, no realizara nada, solo me indicara el problema.
 
-    public boolean VerificarProducto(Producto Producto) throws ProductoYaEnSistemaException,SinConexionException, SQLException {
-        //Creo la consulta en SQL en la cual indico cual sera mi condicion
-        final String SQL = "SELECT * FROM inventarioPF.Productos WHERE Nombre = ? ";
+    //Metodos
 
-        //Creo una variable que al ingresar a la conexion, me permita agregar corroborar datos, con prepare Statement creo mayor seguridad
+    public static int obtenerIDProducto(Conexion conexion, Producto producto) throws SinConexionException {
+        int idBol=0;
+        try{
+            final String SQL = "SELECT idProducto from inventariopf.producto WHERE Nombre=? and Caracteristica=? and Cantidad_min=? and Cantidad_Max=? and Precio=? and Marca=? and Categoria_Producto=?";
+            PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
+            ps.setString(1,producto.getNombre());
+            ps.setString(2,producto.getCaracteristica());
+            ps.setInt(3,producto.getCantidadMin());
+            ps.setInt(4,producto.getCantidadMax());
+            ps.setInt(5,producto.getPrecio());
+            ps.setString(6,producto.getMarca());
+            ps.setString(7,producto.getCategoria());
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            idBol = rs.getInt("idBoleta");
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return idBol;
+
+    }
+
+    public Producto buscarProductoPorId(int id) throws SinConexionException, SQLException {
+        Producto prod=new Producto();
+        final String SQL = "SELECT * FROM inventariopf.producto WHERE idProducto =? ";
         PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-        ps.setString(1, Producto.getNombre());
-        //Para obtener los resultados de la consulta SQL creo una variable ResultSet
-        ResultSet rs = ps.executeQuery(SQL);
-        //Mientras existan coincidencias en la consulta, retornara False, si no encuentra ningun valor, sera true.
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            return false;
+
+            prod.setIdProducto(rs.getInt(1));
+            prod.setNombre(rs.getString(2));
+            prod.setCaracteristica(rs.getString(3));
+            prod.setCantidadMin(rs.getInt(4));
+            prod.setCantidadMax(rs.getInt(5));
+            prod.setPrecio(rs.getInt(6));
+            prod.setMarca(rs.getString(7));
+            prod.setCategoria(rs.getString(8));
+            return prod;
         }
-        throw new ProductoYaEnSistemaException("El Producto ya ha sido creado");
+        System.out.println("Usuario no encontrado");
+        return null;
     }
 
-    //Metodo que me permitira agregar un Producto que no se encuentre en la base de datos
-    public void agregarProducto(Producto producto) throws SinConexionException, SQLException, ProductoYaEnSistemaException {
-        //Verifico que no exista algun producto con el mismo nombre en la base de datos
-        if (VerificarProducto(producto)!=false){
-            //En caso de ser diferente a false, procedere a agregar al producto
-            try{
-                final String SQL = "INSERT INTO Producto(Nombre,Caracteristicas,Cantidad min, Cantidad Max, Precio, Marca)"+ "VALUES (?,?,?,?,?,?)";
-                PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-                ps.setString(1, producto.getNombre());
-                ps.setString(2,producto.getCaracteristica());
-                ps.setInt(3,producto.getCantidadMin());
-                ps.setInt(4,producto.getCantidadMax());
-                ps.setInt(5, producto.getPrecio());
-                ps.setString(6,producto.getMarca());
-                ps.executeUpdate();
-            } catch (SQLException ex){
-                ex.printStackTrace();
-            }
-        }
-        System.out.println("producto ya en sistema");
-    }
+
+//    public void descontarStock(Producto producto, Boleta boleta) throws SinConexionException, SQLException {
+//        String SQLcodigoProducto= "SELECT Producto_idProducto from inventariopf.venta where Boleta_idBoleta = ?";
+//        PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQLcodigoProducto);
+//        ps.setInt(1, venta.getBoleta().getIdBoleta());
+//
+//
+//
+//
+//    }
+//
+//    void descontarstockkk(String codi,String can)
+//    {
+//        int des = Integer.parseInt(can);
+//        String cap="";
+//        int desfinal;
+//        String consul="SELECT * FROM producto WHERE  cod_pro='"+codi+"'";
+//        try {
+//            Statement st= cn.createStatement();
+//            ResultSet rs= st.executeQuery(consul);
+//            while(rs.next())
+//            {
+//                cap= rs.getString(4);
+//            }
+//
+//
+//        } catch (Exception e) {
+//        }
+//        desfinal=Integer.parseInt(cap)-des;
+//        String modi="UPDATE producto SET Stock='"+desfinal+"' WHERE cod_pro = '"+codi+"'";
+//        try {
+//            PreparedStatement pst = cn.prepareStatement(modi);
+//            pst.executeUpdate();
+//        } catch (Exception e) {
+//        }
+//
+//
+//
+//    }
+
+
+
+
+
 
 
 

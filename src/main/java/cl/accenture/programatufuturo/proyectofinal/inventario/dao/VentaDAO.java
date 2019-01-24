@@ -34,7 +34,7 @@ public class VentaDAO {
 
     public int calculatPrecioParaBoleta(List<Venta> ventas){
         int totalBoleta=0;
-        Prod dao= new Prod();
+        ProductoDAO dao= new ProductoDAO();
         VentaDAO dao1 = new VentaDAO();
         for (int i = 0; i < ventas.size(); i++) {
             int totalVenta=ventas.get(i).getTotalVenta();
@@ -45,7 +45,7 @@ public class VentaDAO {
 
     public static boolean confirmarProductoEnVenta(int idProducto, int cantidadAVender) throws SinConexionException {
         try {
-            Prod productoDao = new Prod();
+            ProductoDAO productoDao = new ProductoDAO();
             Producto productoIngresado=productoDao.buscarProductoPorId(idProducto);
             //Cantidad Max vendria siendo nuestro Stock actual
             if (cantidadAVender<=productoIngresado.getCantidadMax()){
@@ -67,7 +67,7 @@ public class VentaDAO {
             final String SQL = "INSERT INTO inventariopf.venta( Boleta_idBoleta, Producto_idProducto, Precio_Venta, Cantidad_Compra)"+ "VALUES (?,?,?,?)";
             PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
             ps.setInt(1,BoletaDAO.obtenerIDBoleta(this.conexion,ventaProducto.getBoleta()));
-            ps.setInt(2,Prod.obtenerIDProducto(this.conexion, ventaProducto.getProducto()));
+            ps.setInt(2, ProductoDAO.obtenerIDProducto(this.conexion, ventaProducto.getProducto()));
             ps.setInt(3,ventaProducto.getPrecioVenta());
             ps.setInt(4, ventaProducto.getCantidadCompra());
             ps.executeUpdate();

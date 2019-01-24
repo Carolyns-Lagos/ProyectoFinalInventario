@@ -3,7 +3,8 @@ package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 public class Usuario {
 
     //Atributos de la clase Usuario
-    private String nombre,rut, correo;
+    private String nombre, correo;
+    private String rut;
     private int telefono;
     private String password,rol;
     private Sucursal sucursal;
@@ -46,7 +47,7 @@ public class Usuario {
     }
 
     public void setRut(String nuevoRut) {
-        this.rut = rut;
+        this.rut = nuevoRut;
     }
 
     public String getCorreo() {
@@ -73,10 +74,7 @@ public class Usuario {
         this.password = nuevaPassword;
     }
 
-    public String getRol() {
-
-        return this.rol;
-    }
+    public String getRol() { return this.rol; }
 
     public void setRol(String nuevoRol) {
         this.rol = nuevoRol;

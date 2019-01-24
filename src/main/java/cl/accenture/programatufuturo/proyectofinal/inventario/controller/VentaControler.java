@@ -22,7 +22,7 @@ public class VentaControler {
 //    public List<Venta> crearListaVentaAPartirDelIdProducto( @PathVariable("id") int idProducto, int cantidadAVender){
 //        List<Venta> listaProductosAVender=new LinkedList<Venta>();
 //        try {
-//            Prod productoDao = new Prod();
+//            ProductoDAO productoDao = new ProductoDAO();
 //            Producto productoIngresado=productoDao.buscarProductoPorId(idProducto);
 //            for (int i = 0; i < listaProductosAVender.size(); i++) {
 //                if (VentaDAO.confirmarProductoEnVenta(idProducto,cantidadAVender)==true){
