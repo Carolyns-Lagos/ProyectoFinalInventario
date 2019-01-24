@@ -1,7 +1,6 @@
-package cl.accenture.programatufuturo.proyectofinal.inventario.controller;
+package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 
 
-import cl.accenture.programatufuturo.proyectofinal.inventario.dao.Conexion;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class ExcelControler {
+public class Excel {
     public static void main(String[] args) {
         crearExcel();
         leer();

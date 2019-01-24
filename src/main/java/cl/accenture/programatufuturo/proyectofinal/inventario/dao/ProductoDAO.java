@@ -74,6 +74,8 @@ public class ProductoDAO {
         return null;
     }
 
+    
+
 
 //    public void descontarStock(Producto producto, Boleta boleta) throws SinConexionException, SQLException {
 //        String SQLcodigoProducto= "SELECT Producto_idProducto from inventariopf.venta where Boleta_idBoleta = ?";
