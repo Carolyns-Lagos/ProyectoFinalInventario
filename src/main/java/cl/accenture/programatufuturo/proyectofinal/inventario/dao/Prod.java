@@ -52,29 +52,28 @@ public class Prod {
 
     }
 
-    public Producto buscarProductoPorId(int idProducto)throws SinConexionException{
-        Producto producto = null;
-        try{
-            final String SQL = "SELECT * from inventariopf.productowhere idProducto = ?";
-            PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-            ps.setInt(1, idProducto);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                producto = new Producto();
-                producto.setIdProducto( rs.getInt(1));
-                producto.setNombre( rs.getString(2));
-                producto.setCaracteristica( rs.getString(3));
-                producto.setCantidadMin(rs.getInt(4));
-                producto.setCantidadMax(rs.getInt(5));
-                producto.setPrecio(rs.getInt(6));
-                producto.setMarca( rs.getString(7));
-                producto.setCategoria( rs.getString(8));
-            }
-        }catch (SQLException ex){
-            ex.printStackTrace();
+    public Producto buscarProductoPorId(int id) throws SinConexionException, SQLException {
+        Producto prod=new Producto();
+        final String SQL = "SELECT * FROM inventariopf.producto WHERE idProducto =? ";
+        PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+
+            prod.setIdProducto(rs.getInt(1));
+            prod.setNombre(rs.getString(2));
+            prod.setCaracteristica(rs.getString(3));
+            prod.setCantidadMin(rs.getInt(4));
+            prod.setCantidadMax(rs.getInt(5));
+            prod.setPrecio(rs.getInt(6));
+            prod.setMarca(rs.getString(7));
+            prod.setCategoria(rs.getString(8));
+            return prod;
         }
-        return producto;
+        System.out.println("Usuario no encontrado");
+        return null;
     }
+
 
 //    public void descontarStock(Producto producto, Boleta boleta) throws SinConexionException, SQLException {
 //        String SQLcodigoProducto= "SELECT Producto_idProducto from inventariopf.venta where Boleta_idBoleta = ?";

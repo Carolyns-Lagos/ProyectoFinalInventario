@@ -17,7 +17,7 @@ public class UsuarioControler {
 
     Sucursal sucursal = new Sucursal("LLuvia", "Los Leones", "Providencia", "Providencia 123");
 
-    @CrossOrigin
+    @CrossOrigin(origins="*")
     @RequestMapping(method = RequestMethod.POST ,
             value= "/login")  //localhost:8080/usuarios/login
     public void loginInicial(@RequestBody Usuario usuario) {

@@ -3,10 +3,11 @@ package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Boleta;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Producto;
-import cl.accenture.programatufuturo.proyectofinal.inventario.model.Usuario;
+import cl.accenture.programatufuturo.proyectofinal.inventario.model.Venta;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 public class VentaDAO {
 
@@ -31,26 +32,47 @@ public class VentaDAO {
         this.conexion = conexion;
     }
 
-    public void ingresarVenta(Producto producto, int cantidad) throws SinConexionException {
-        //Este seria el usuario que obtenemos en el login
-        Usuario usuario = new Usuario("1888","Jua Perez","hola@gmail.com",5558684,"1234aa");
-        //La boleta se supone que se crea al mismo tiempo que la venta
-        Boleta boleta= new Boleta(usuario);
-        BoletaDAO dao= new BoletaDAO();
-        dao.agregarBoleta(boleta);
-        int precioVenta= (int)(producto.getPrecio()*0.25);
+    public int calculatPrecioParaBoleta(List<Venta> ventas){
+        int totalBoleta=0;
+        Prod dao= new Prod();
+        VentaDAO dao1 = new VentaDAO();
+        for (int i = 0; i < ventas.size(); i++) {
+            int totalVenta=ventas.get(i).getTotalVenta();
+            totalBoleta+=totalVenta;
+        }
+        return totalBoleta;
+    }
+
+    public static boolean confirmarProductoEnVenta(int idProducto, int cantidadAVender) throws SinConexionException {
+        try {
+            Prod productoDao = new Prod();
+            Producto productoIngresado=productoDao.buscarProductoPorId(idProducto);
+            //Cantidad Max vendria siendo nuestro Stock actual
+            if (cantidadAVender<=productoIngresado.getCantidadMax()){
+                return true;
+            } else if(cantidadAVender>productoIngresado.getCantidadMax()){
+                System.out.println("No es posible Registrar el roducto con id " + idProducto+
+                        "en la venta debido a que intenta vender un numero superior al stock disponible"  );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    //Esto seria por 1 producto
+    public void ingresarVenta(Venta ventaProducto, Boleta botetaVenta) throws SinConexionException {
+        ventaProducto.setBoleta(botetaVenta);
         try{
             final String SQL = "INSERT INTO inventariopf.venta( Boleta_idBoleta, Producto_idProducto, Precio_Venta, Cantidad_Compra)"+ "VALUES (?,?,?,?)";
             PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-            ps.setInt(1,boleta.getIdBoleta());
-            ps.setInt(2,Prod.obtenerIDProducto(this.conexion,producto));
-            ps.setInt(3,precioVenta);
-            ps.setInt(4, cantidad);
+            ps.setInt(1,BoletaDAO.obtenerIDBoleta(this.conexion,ventaProducto.getBoleta()));
+            ps.setInt(2,Prod.obtenerIDProducto(this.conexion, ventaProducto.getProducto()));
+            ps.setInt(3,ventaProducto.getPrecioVenta());
+            ps.setInt(4, ventaProducto.getCantidadCompra());
             ps.executeUpdate();
         } catch (SQLException ex){
             ex.printStackTrace();
-        } catch (SinConexionException e) {
-            e.printStackTrace();
         }
     }
 }

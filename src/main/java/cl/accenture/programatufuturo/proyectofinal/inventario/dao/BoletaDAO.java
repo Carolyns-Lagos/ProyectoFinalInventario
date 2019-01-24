@@ -31,12 +31,13 @@ public class BoletaDAO {
 
     //Metodos
 
-    public void agregarBoleta(Boleta boleta) throws SinConexionException {
+    public void agregarBoleta(Boleta boleta, int totalBoleta) throws SinConexionException {
         try{
-            final String SQL = "INSERT INTO inventariopf.boleta(Usuario_Rut, Fecha)"+ "VALUES (?,?)";
+            final String SQL = "INSERT INTO inventariopf.boleta(Usuario_Rut, Fecha, Total_Boleta)"+ "VALUES (?,?,?)";
             PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
             ps.setString(1,boleta.getUsuario().getRut());
             ps.setDate(2,boleta.getFecha());
+            ps.setInt(3,totalBoleta);
             ps.executeUpdate();
         } catch (SQLException ex){
             ex.printStackTrace();
@@ -61,17 +62,24 @@ public class BoletaDAO {
 
     }
 
-    public boolean buscarBoletaPorID(Boleta boleta) throws SinConexionException, SQLException {
-        final String SQL = "SELECT * FROM inventariopf.boleta WHERE Nombre =? ";
+    public Boleta buscarBoletaPorID(int id) throws SinConexionException, SQLException {
+        Boleta bol=new Boleta();
+        final String SQL = "SELECT * FROM inventariopf.boleta WHERE idBoleta =? ";
         PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-        ps.setInt(1,BoletaDAO.obtenerIDBoleta(this.conexion, boleta));
+        ps.setInt(1,id);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
-            return true;
+            bol.setIdBoleta(rs.getInt(1));
+            bol.getUsuario().setRut(rs.getString(2));
+            bol.setFecha(rs.getDate(3));
+            bol.setTotalBoleta(rs.getInt(4));
+            return bol;
         }
         System.out.println("Boleta no encontrada");
-        return false;
+        return null;
     }
+
+
 
 
 

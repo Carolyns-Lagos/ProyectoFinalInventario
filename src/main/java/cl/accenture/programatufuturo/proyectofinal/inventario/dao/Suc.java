@@ -2,13 +2,10 @@ package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Sucursal;
-import cl.accenture.programatufuturo.proyectofinal.inventario.model.Usuario;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Suc {
 
@@ -41,11 +38,15 @@ public class Suc {
         ps.setString(1, sucursal.getNombre());
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {
+            System.out.println("Socursal existente");
             return true;
+
         }
         System.out.println("Sucursal no encontrado");
         return false;
     }
+
+
     public static int obtenerIDSucursall(Conexion conexion, Sucursal sucursal) throws SinConexionException{
         int idSuc=0;
         try{
@@ -62,11 +63,9 @@ public class Suc {
             e.printStackTrace();
         }
         return idSuc;
-
     }
 
-
-    public void agregarSucursall(Sucursal sucursal) throws Exception {
+    public void agregarSucursall(Sucursal sucursal) throws SinConexionException, SQLException {
 
         if (verificarSucursal(sucursal)!=true){
             System.out.println("Agregar Sucursal");
@@ -85,8 +84,8 @@ public class Suc {
         }else {
             System.out.println("Sucursal existente");
         }
-
     }
+
     public void eliminarSucursalPorNombre(Sucursal sucursal) throws SinConexionException, SQLException {
         if (verificarSucursal(sucursal)==false){
             //En caso de ser verdadero, procedere a eliminar al usuario
@@ -103,11 +102,25 @@ public class Suc {
             } catch (SQLException ex){
                 ex.printStackTrace();
             }
-
-
         }
-
     }
 
+    public Sucursal buscarSucursalPorId(int id) throws SinConexionException, SQLException {
+        Sucursal suc=new Sucursal();
+        final String SQL = "SELECT * FROM inventariopf.sucursal WHERE idSucursal =? ";
+        PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
 
+            suc.setIdSucursal(rs.getInt(1));
+            suc.setNombre(rs.getString(2));
+            suc.setUbicacion(rs.getString(3));
+            suc.setComuna(rs.getString(4));
+            suc.setDireccion(rs.getString(5));
+            return suc;
+        }
+        System.out.println("Sucursal no encontradoa");
+        return null;
+    }
 }

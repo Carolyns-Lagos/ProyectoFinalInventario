@@ -10,10 +10,10 @@ public class Venta {
 
     public Venta() {}
 
-    public Venta(Producto producto, int precioVenta, int cantidadCompra) {
+    public Venta(Producto producto, int cantidadCompraa) {
         this.producto = producto;
-        this.precioVenta = precioVenta;
-        this.cantidadCompra = cantidadCompra;
+        this.precioVenta = (int)(producto.getPrecio()*1.25);
+        this.cantidadCompra = cantidadCompraa;
         this.totalVenta=precioVenta*cantidadCompra;
     }
 
@@ -50,5 +50,13 @@ public class Venta {
 
     public void setCantidadCompra(int cantidadCompra) {
         this.cantidadCompra = cantidadCompra;
+    }
+
+    public int getTotalVenta() {
+        return this.totalVenta;
+    }
+
+    public void setTotalVenta(int totalVenta) {
+        this.totalVenta = totalVenta;
     }
 }

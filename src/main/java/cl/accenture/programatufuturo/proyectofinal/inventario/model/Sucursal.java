@@ -1,9 +1,5 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.model;
 
-import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
-
-import java.sql.SQLException;
-
 public class Sucursal {
 
     //Atributos de la clase Sucursal
@@ -14,7 +10,7 @@ public class Sucursal {
 
     //Constructores
 
-    public Sucursal() throws SinConexionException, SQLException {
+    public Sucursal(){
 
     }
 

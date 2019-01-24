@@ -122,6 +122,27 @@ public class UsuarioDAO {
         return false;
     }
 
+    public Usuario buscarUsuarioPorRut(String rut) throws SinConexionException, SQLException {
+        Usuario user=new Usuario();
+        final String SQL = "SELECT * FROM inventariopf.usuario WHERE Rut =? ";
+        PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
+        ps.setString(1, rut);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+
+            user.setRut(rs.getString(1));
+            user.setNombre(rs.getString(2));
+            user.setCorreo(rs.getString(3));
+            user.setTelefono(rs.getInt(4));
+            user.setPassword(rs.getString(5));
+            user.setRol(rs.getString(6));
+            user.getSucursal().setIdSucursal(rs.getInt(7));
+            return user;
+        }
+        System.out.println("Usuario no encontrado");
+        return null;
+    }
+
     public void agregarUsuario(Usuario usuario) throws SinConexionException, SQLException {
 
         if (verificarUsuario(usuario)==false){
@@ -162,10 +183,6 @@ public class UsuarioDAO {
             } catch (SQLException ex){
                 ex.printStackTrace();
             }
-
-
         }
-
     }
-
 }
