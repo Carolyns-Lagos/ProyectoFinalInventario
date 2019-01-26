@@ -1,15 +1,16 @@
 package cl.accenture.programatufuturo.proyectofinal.inventario.controller;
 
 import cl.accenture.programatufuturo.proyectofinal.inventario.dao.BoletaDAO;
+import cl.accenture.programatufuturo.proyectofinal.inventario.dao.ProductoDAO;
 import cl.accenture.programatufuturo.proyectofinal.inventario.dao.VentaDAO;
+import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Boleta;
+import cl.accenture.programatufuturo.proyectofinal.inventario.model.Producto;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Usuario;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Venta;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @CrossOrigin(origins="*")
@@ -40,10 +41,28 @@ public class VentaControler {
 //    }
 
 
+
+    @CrossOrigin(origins="*")
+    @PostMapping("/ingresarProducto")
+    public Producto idProducto(@RequestBody Producto product) throws SinConexionException, SQLException {
+        ProductoDAO producto=new ProductoDAO();
+        Producto p=producto.buscarProductoPorId(product.getIdProducto());
+        return p;
+    }
+
+    @CrossOrigin(origins="*")
+    @PostMapping("/buscarProducto")
+    public Producto buscarProducto(@RequestBody Producto product) throws SinConexionException, SQLException {
+        ProductoDAO producto=new ProductoDAO();
+        Producto p=producto.buscarProductoPorId(product.getIdProducto());
+        return p;
+    }
+
+
     @CrossOrigin(origins="*")
     @PostMapping("/ingresarVenta")
     //Recibire el usuario con el cual se ingreso al login y una lista de ventas de la pantalla ventas
-    public String vender(Usuario userLogin, List<Venta> ventas ){
+    public String vender(@RequestBody Usuario userLogin, @RequestBody List<Venta> ventas ){
         try {
             //Creo los objetos dao para ocupar sus metodos
             VentaDAO ventaDao = new VentaDAO();
@@ -67,7 +86,13 @@ public class VentaControler {
                 Venta vent= new Venta(ventas.get(i).getProducto(), ventas.get(i).getCantidadCompra());
                 ventaDao.ingresarVenta(vent, boletaVenta);
             }
-            //Falta agregar que se actualice el stock
+            //Confirmada la Venta, se Procede a Actualizar el Stock
+            ProductoDAO productoDao= new ProductoDAO();
+            /*Creare una lista interna de ventas, con todos los atributos para tener libre acceso los id de Producto*/
+            List<Venta> lista=ventaDao.buscarVentasPorBoleta(boletaVenta);
+            /* Posterior a ello aplico el metodo para descontar Stock, el cual recibira la Lista Creada Anteriormente
+            */
+            productoDao.actualizarStock(lista);
             return "Venta Exitosa";
         }catch (Exception ex){
             ex.printStackTrace();

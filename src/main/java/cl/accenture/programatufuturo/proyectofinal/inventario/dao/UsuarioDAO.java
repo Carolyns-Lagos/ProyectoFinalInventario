@@ -88,38 +88,117 @@ public class UsuarioDAO {
         return base64EncryptedString;
     }
 
-    public boolean login(Usuario usuario) throws UsuarioOContraseñaIncorrectosException, SinConexionException {
+    public boolean loginVendedor(Usuario usuario) throws UsuarioOContraseñaIncorrectosException, SinConexionException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            final String SQL = "SELECT * FROM inventarioPF.usuario WHERE Nombre = ?  AND Password =?";
+            final String SQL = "SELECT * FROM inventarioPF.usuario WHERE Rut = ?  AND Password =? ";
 
             String contraseñaEncriptada= UsuarioDAO.encriptar(usuario.getPassword());
-            PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-            ps.setString(1, usuario.getNombre());
+            ps = conexion.obtenerConnection().prepareStatement(SQL);
+            ps.setString(1, usuario.getRut());
             ps.setString(2, contraseñaEncriptada);
-            ResultSet rs = ps.executeQuery(SQL);
-            while (rs.next()) {
+            rs = ps.executeQuery(SQL);
+            UsuarioDAO dao= new UsuarioDAO();
+            Usuario usuarioVendedor= dao.buscarUsuarioPorRut(usuario.getRut());
+            if (rs.absolute(1) && usuarioVendedor.getRol()=="VENDEDOR") {
                 return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-
+        } finally {
+            try {
+                if (getConexion()!=null) getConexion().getConnection().close();
+                if (ps != null) ps.close();
+                if (rs !=null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        throw new UsuarioOContraseñaIncorrectosException("Usuario o Contraseña incorrecto");
+        throw new UsuarioOContraseñaIncorrectosException("Usuario o Contraseña Incorrecto");
     }
+
+    public boolean loginAdministrador(Usuario usuario) throws UsuarioOContraseñaIncorrectosException, SinConexionException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            final String SQL = "SELECT * FROM inventarioPF.usuario WHERE Rut = ?  AND Password =? ";
+
+            String contraseñaEncriptada= UsuarioDAO.encriptar(usuario.getPassword());
+            ps = conexion.obtenerConnection().prepareStatement(SQL);
+            ps.setString(1, usuario.getRut());
+            ps.setString(2, contraseñaEncriptada);
+            rs = ps.executeQuery(SQL);
+            UsuarioDAO dao= new UsuarioDAO();
+            Usuario usuarioVendedor= dao.buscarUsuarioPorRut(usuario.getRut());
+            if (rs.absolute(1) && usuarioVendedor.getRol()=="ADMINISTRADOR") {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (getConexion()!=null) getConexion().getConnection().close();
+                if (ps != null) ps.close();
+                if (rs !=null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        throw new UsuarioOContraseñaIncorrectosException("Usuario o Contraseña Incorrecto");
+    }
+
 
     //Metodo para agregar usuario, en caso de que no exista o no se pueda conectar por algun problema, no realizara nada, solo me indicara el problema.
     //verificar usuario, retorna un boolean, recibe un usuario
 
     public boolean verificarUsuario(Usuario usuario) throws SinConexionException, SQLException {
-        final String SQL = "SELECT * FROM inventariopf.usuario WHERE Rut =? ";
-        PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-        ps.setString(1, usuario.getRut());
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
-            return true;
+        PreparedStatement ps= null;
+        ResultSet rs= null;
+        try {
+            final String SQL = "SELECT * FROM inventariopf.usuario WHERE Rut =? ";
+            ps = conexion.obtenerConnection().prepareStatement(SQL);
+            ps.setString(1, usuario.getRut());
+            rs = ps.executeQuery();
+            if (rs.absolute(1)) {
+                return true;
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (getConexion()!=null) getConexion().getConnection().close();
+                if (ps != null) ps.close();
+                if (rs !=null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("Usuario no encontrado");
         return false;
+    }
+
+    public void agregarUsuario(Usuario usuario) throws SinConexionException, SQLException {
+        PreparedStatement ps=null;
+        if (verificarUsuario(usuario)==false){
+            System.out.println("Agregar Usuario");
+            try{
+                final String SQL = "INSERT INTO inventariopf.usuario( Rut, Nombre, Correo,Telefono, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?,?)";
+                ps = conexion.obtenerConnection().prepareStatement(SQL);
+                ps.setString(1,usuario.getRut());
+                ps.setString(2,usuario.getNombre());
+                ps.setString(3,usuario.getCorreo());
+                ps.setInt(4, usuario.getTelefono());
+                ps.setString(5,UsuarioDAO.encriptar(usuario.getPassword()));
+                ps.setString(6,usuario.getRol());
+                ps.setInt(7, SucursalDAO.obtenerIDSucursall(this.conexion, usuario.getSucursal()));
+                ps.executeUpdate();
+                getConexion().getConnection().close();
+                ps.close();
+
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public Usuario buscarUsuarioPorRut(String rut) throws SinConexionException, SQLException {
@@ -143,29 +222,7 @@ public class UsuarioDAO {
         return null;
     }
 
-    public void agregarUsuario(Usuario usuario) throws SinConexionException, SQLException {
 
-        if (verificarUsuario(usuario)==false){
-            System.out.println("Agregar Usuario");
-            try{
-                final String SQL = "INSERT INTO inventariopf.usuario( Rut, Nombre, Correo,Telefono, Password, Rol, Sucursal_idSucursal)"+ "VALUES (?,?,?,?,?,?,?)";
-                PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-                ps.setString(1,usuario.getRut());
-                ps.setString(2,usuario.getNombre());
-                ps.setString(3,usuario.getCorreo());
-                ps.setInt(4, usuario.getTelefono());
-                ps.setString(5,UsuarioDAO.encriptar(usuario.getPassword()));
-                ps.setString(6,usuario.getRol());
-                ps.setInt(7, SucursalDAO.obtenerIDSucursall(this.conexion, usuario.getSucursal()));
-                ps.executeUpdate();
-            } catch (SQLException ex){
-                ex.printStackTrace();
-            }
-        }else {
-            System.out.println("Usuario existente");
-        }
-
-    }
 
     public void eliminarUsuarioPorRut(Usuario usuario) throws SinConexionException, SQLException {
         if (verificarUsuario(usuario)==false){

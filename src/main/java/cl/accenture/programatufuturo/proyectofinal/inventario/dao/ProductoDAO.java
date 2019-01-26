@@ -2,10 +2,12 @@ package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Producto;
+import cl.accenture.programatufuturo.proyectofinal.inventario.model.Venta;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ProductoDAO {
     private Conexion conexion;
@@ -52,39 +54,66 @@ public class ProductoDAO {
 
     }
 
-    public Producto buscarProductoPorId(int id) throws SinConexionException, SQLException {
+    public Producto buscarProductoPorId(int id) throws SinConexionException {
         Producto prod=new Producto();
-        final String SQL = "SELECT * FROM inventariopf.producto WHERE idProducto =? ";
-        PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
+        try {
+            final String SQL = "SELECT * FROM inventariopf.producto WHERE idProducto =? ";
+            PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
 
-            prod.setIdProducto(rs.getInt(1));
-            prod.setNombre(rs.getString(2));
-            prod.setCaracteristica(rs.getString(3));
-            prod.setCantidadMin(rs.getInt(4));
-            prod.setCantidadMax(rs.getInt(5));
-            prod.setPrecio(rs.getInt(6));
-            prod.setMarca(rs.getString(7));
-            prod.setCategoria(rs.getString(8));
-            return prod;
+                prod.setIdProducto(rs.getInt(1));
+                prod.setNombre(rs.getString(2));
+                prod.setCaracteristica(rs.getString(3));
+                prod.setCantidadMin(rs.getInt(4));
+                prod.setCantidadMax(rs.getInt(5));
+                prod.setPrecio(rs.getInt(6));
+                prod.setMarca(rs.getString(7));
+                prod.setCategoria(rs.getString(8));
+                return prod;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         System.out.println("Usuario no encontrado");
         return null;
     }
 
-    
+
+
+    public void actualizarStock(List<Venta> ventasporBoleta) throws SinConexionException {
+
+        for (int i = 0; i <ventasporBoleta.size() ; i++) {
+            try{
+                final String SQL1 = "SELECT Cantidad_Max FROM inventariopf.producto WHERE idProducto= ? ";
+                PreparedStatement ps1 = conexion.obtenerConnection().prepareStatement(SQL1);
+                ps1.setInt(1, ventasporBoleta.get(i).getProducto().getIdProducto() );
+                ResultSet rs1 = ps1.executeQuery();
+                rs1.next();
+                int stockActual = rs1.getInt("Cantidad_Max");
+                int cantidadVenta= ventasporBoleta.get(i).getCantidadCompra();
+                int cantidadFinal=stockActual-cantidadVenta;
+                final String SQL2 = "UPDATE producto SET Cantidad_Max= ? WHERE idProducto =?";
+                PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL2);
+                ps.setInt(1, cantidadFinal);
+                ps.setInt(2,ventasporBoleta.get(i).getProducto().getIdProducto());
+                ResultSet rs2 = ps.executeQuery();
+                rs2.next();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
 
 //    public void descontarStock(Producto producto, Boleta boleta) throws SinConexionException, SQLException {
 //        String SQLcodigoProducto= "SELECT Producto_idProducto from inventariopf.venta where Boleta_idBoleta = ?";
 //        PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQLcodigoProducto);
 //        ps.setInt(1, venta.getBoleta().getIdBoleta());
-//
-//
-//
-//
 //    }
 //
 //    void descontarstockkk(String codi,String can)
@@ -100,8 +129,6 @@ public class ProductoDAO {
 //            {
 //                cap= rs.getString(4);
 //            }
-//
-//
 //        } catch (Exception e) {
 //        }
 //        desfinal=Integer.parseInt(cap)-des;

@@ -2,7 +2,6 @@ package cl.accenture.programatufuturo.proyectofinal.inventario.dao;
 
 //Es necesario importar mi clase sin conexion
 
-import cl.accenture.programatufuturo.proyectofinal.inventario.exception.DriverErrorException;
 import cl.accenture.programatufuturo.proyectofinal.inventario.exception.SinConexionException;
 
 import java.sql.Connection;
@@ -24,12 +23,13 @@ public class Conexion {
     private static final String USER = "root";
     //Contraseña mysql
     private static final String PASSWORD = "1234";
+    private Connection connection;
 
     //Falta explicar esto
     public Connection obtenerConnection() throws SinConexionException{
         try{
             Class.forName(DRIVER);
-            Connection connection=
+            this.connection=
                     DriverManager.getConnection(
                             "jdbc:mysql://"+HOST+":"+PORT+"/"+DATABASE + "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
                             USER,PASSWORD);
@@ -44,4 +44,12 @@ public class Conexion {
         }
 
     }
+
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+
+
+
 }

@@ -23,6 +23,11 @@ public class Usuario {
         this.rol=rol;
         this.sucursal = sucursal;
     }
+    public Usuario(String rut, String password) {
+        this.rut = rut;
+        this.password = password;
+
+    }
     public Usuario(String rut, String nombre, String correo,int telefono, String password) {
         this.rut = rut;
         this.nombre = nombre;

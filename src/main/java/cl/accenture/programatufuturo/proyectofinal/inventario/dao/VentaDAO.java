@@ -6,7 +6,9 @@ import cl.accenture.programatufuturo.proyectofinal.inventario.model.Producto;
 import cl.accenture.programatufuturo.proyectofinal.inventario.model.Venta;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VentaDAO {
@@ -60,13 +62,36 @@ public class VentaDAO {
         return false;
     }
 
+    public List<Venta> buscarVentasPorBoleta(Boleta boleta) throws SinConexionException{
+        List<Venta> ventasPorBoleta = new ArrayList<Venta>();
+        try {
+            final String SQL = "SELECT * FROM inventariopf.venta WHERE Boleta_idBoleta= ?";
+            PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
+            ps.setInt(1, boleta.getIdBoleta());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Venta ventas= new Venta();
+                ventas.getBoleta().setIdBoleta(rs.getInt(1));
+                ventas.getProducto().setIdProducto( rs.getInt(2));
+                ventas.setPrecioVenta( rs.getInt(3));
+                ventas.setCantidadCompra( rs.getInt(4));
+                ventas.setTotalVenta( rs.getInt(5));
+                ventasPorBoleta.add(ventas);
+            }
+        }catch (SQLException ex){
+            ex.printStackTrace();
+        }
+        return ventasPorBoleta;
+    }
+
     //Esto seria por 1 producto
     public void ingresarVenta(Venta ventaProducto, Boleta botetaVenta) throws SinConexionException {
         ventaProducto.setBoleta(botetaVenta);
+        botetaVenta.setIdBoleta(BoletaDAO.obtenerIDBoleta(this.conexion,ventaProducto.getBoleta()));
         try{
             final String SQL = "INSERT INTO inventariopf.venta( Boleta_idBoleta, Producto_idProducto, Precio_Venta, Cantidad_Compra)"+ "VALUES (?,?,?,?)";
             PreparedStatement ps = conexion.obtenerConnection().prepareStatement(SQL);
-            ps.setInt(1,BoletaDAO.obtenerIDBoleta(this.conexion,ventaProducto.getBoleta()));
+            ps.setInt(1,ventaProducto.getBoleta().getIdBoleta());
             ps.setInt(2, ProductoDAO.obtenerIDProducto(this.conexion, ventaProducto.getProducto()));
             ps.setInt(3,ventaProducto.getPrecioVenta());
             ps.setInt(4, ventaProducto.getCantidadCompra());
