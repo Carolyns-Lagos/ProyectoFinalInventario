@@ -19,6 +19,27 @@ public class UsuarioControler {
 
     @CrossOrigin(origins="*")
     @RequestMapping(method = RequestMethod.POST ,
+            value= "/loginNormal")  //localhost:8080/usuarios/login
+    //Recibire el rut y la contraseña enviada desde la app
+    public Usuario loginInicialNormal(@RequestBody Usuario usuario) throws SQLException {
+        try {
+            UsuarioDAO dao = new UsuarioDAO();
+            //Verificare si existe, si es asi sera true, si no false
+            boolean existe=dao.verificarUsuario(usuario);
+            if (existe== true){
+                //Si existe retornare el usuario con todos los atributos para que lo puedan ocupar luego en html
+                Usuario newUsuario= dao.buscarUsuarioPorRut(usuario.getRut());
+                return newUsuario;
+            }
+        } catch (SinConexionException e) {
+            e.printStackTrace();
+        }
+        //Si no esta Les retornare nada
+        return null;
+    }
+
+    @CrossOrigin(origins="*")
+    @RequestMapping(method = RequestMethod.POST ,
             value= "/loginAdministrador")  //localhost:8080/usuarios/login
     //Recibire el rut y la contraseña enviada desde la app
     public Usuario loginInicialAdministrador(@RequestBody Usuario usuario) throws SQLException {

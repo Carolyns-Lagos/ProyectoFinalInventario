@@ -49,6 +49,10 @@ public class Conexion {
         return this.connection;
     }
 
+    public void cerrarConexion(){
+        this.connection=null;
+    }
+
 
 
 

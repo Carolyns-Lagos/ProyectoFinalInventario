@@ -46,18 +46,14 @@ public class VentaDAO {
     }
 
     public static boolean confirmarProductoEnVenta(int idProducto, int cantidadAVender) throws SinConexionException {
-        try {
-            ProductoDAO productoDao = new ProductoDAO();
-            Producto productoIngresado=productoDao.buscarProductoPorId(idProducto);
-            //Cantidad Max vendria siendo nuestro Stock actual
-            if (cantidadAVender<=productoIngresado.getCantidadMax()){
-                return true;
-            } else if(cantidadAVender>productoIngresado.getCantidadMax()){
-                System.out.println("No es posible Registrar el roducto con id " + idProducto+
-                        "en la venta debido a que intenta vender un numero superior al stock disponible"  );
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        ProductoDAO productoDao = new ProductoDAO();
+        Producto productoIngresado=productoDao.buscarProductoPorId(idProducto);
+        //Cantidad Max vendria siendo nuestro Stock actual
+        if (cantidadAVender<=productoIngresado.getCantidadMax()){
+            return true;
+        } else if(cantidadAVender>productoIngresado.getCantidadMax()){
+            System.out.println("No es posible Registrar el roducto con id " + idProducto+
+                    "en la venta debido a que intenta vender un numero superior al stock disponible"  );
         }
         return false;
     }

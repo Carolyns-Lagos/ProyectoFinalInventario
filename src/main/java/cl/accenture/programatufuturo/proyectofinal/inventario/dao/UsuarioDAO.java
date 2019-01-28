@@ -118,6 +118,34 @@ public class UsuarioDAO {
         throw new UsuarioOContraseñaIncorrectosException("Usuario o Contraseña Incorrecto");
     }
 
+    public boolean loginNormal(Usuario usuario) throws UsuarioOContraseñaIncorrectosException, SinConexionException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            final String SQL = "SELECT * FROM inventarioPF.usuario WHERE Rut = ?  AND Password =? ";
+
+            String contraseñaEncriptada= UsuarioDAO.encriptar(usuario.getPassword());
+            ps = conexion.obtenerConnection().prepareStatement(SQL);
+            ps.setString(1, usuario.getRut());
+            ps.setString(2, contraseñaEncriptada);
+            rs = ps.executeQuery(SQL);
+            while(rs.next())
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (getConexion()!=null) getConexion().getConnection().close();
+                if (ps != null) ps.close();
+                if (rs !=null) rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        throw new UsuarioOContraseñaIncorrectosException("Usuario o Contraseña Incorrecto");
+    }
+
     public boolean loginAdministrador(Usuario usuario) throws UsuarioOContraseñaIncorrectosException, SinConexionException {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -156,9 +184,10 @@ public class UsuarioDAO {
         PreparedStatement ps= null;
         ResultSet rs= null;
         try {
-            final String SQL = "SELECT * FROM inventariopf.usuario WHERE Rut =? ";
+            final String SQL = "SELECT * FROM inventariopf.usuario WHERE Rut =? AND Password= ?";
             ps = conexion.obtenerConnection().prepareStatement(SQL);
             ps.setString(1, usuario.getRut());
+            ps.setString(2, UsuarioDAO.encriptar(usuario.getPassword()));
             rs = ps.executeQuery();
             if (rs.absolute(1)) {
                 return true;
